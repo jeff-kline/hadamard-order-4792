@@ -2,7 +2,9 @@
 
 Jeffery Kline
 
-**Status: release candidate for version 0.1.0.** No DOI exists yet. Admission under Kline's [research standard](https://jeff-kline.github.io/posts/research-program/index.html) is pending; see the [release record](ADMISSION.md). [Read the paper](paper/main.pdf) · [LaTeX source](paper/main.tex)
+**Status: version 0.1.0 admitted November 27, 2026.** [Tag v0.1.0](https://github.com/jeff-kline/hadamard-order-4792/tree/v0.1.0) · [Version DOI](https://doi.org/10.5281/zenodo.24597897) · [All versions](https://doi.org/10.5281/zenodo.24597896) · [Admission record](ADMISSION.md)
+
+Admission records the checks completed under Kline's [research standard](https://jeff-kline.github.io/posts/research-program/index.html). Independent expert peer review remains outstanding. [Read the paper](paper/main.pdf) · [LaTeX source](paper/main.tex)
 
 We construct a Hadamard matrix of order **4792** $=8\cdot599$. This order is listed as open in the 2026 survey by Egan, Kotsireas, London and Ó Catháin, and in the current list of unknown orders. [Survey, Table 5](https://arxiv.org/html/2610.27175v2) · [List of unknown orders](https://www.math74.com/Hadamard/unknown.html)
 
