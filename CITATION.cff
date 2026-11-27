@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "Please cite the paper and identify the version used."
+title: "A Hadamard matrix of order 4792"
+version: "0.1.0"
+type: software
+authors:
+  - family-names: Kline
+    given-names: Jeffery
+license: GPL-3.0-only
+repository-code: "https://github.com/jeff-kline/hadamard-order-4792"
+keywords:
+  - Hadamard matrices
+  - conference matrices
+  - signed groups
+  - Williamson-type matrices
+abstract: >-
+  A Hadamard matrix of order 4792 = 8 * 599, an order listed as open in the
+  2026 survey of Egan, Kotsireas, London and O Cathain. Miyamoto's theorem
+  gives order 8m from a conference matrix of order m+1 and a quaternary
+  Hadamard matrix of order m-1; the quaternary input may be replaced by a
+  real Hadamard matrix of order 2(m-1) whose rows and columns pair into 2x2
+  Hadamard blocks, allowing reflections as well as rotations. A paired-block
+  matrix of order 1196 comes from the Cooper-Wallis array of order 52 with
+  Williamson-type matrices of order 23, two of them equal, obtained from a
+  self-complementary regular two-graph on 46 vertices. The software rebuilds
+  the matrix and checks every pair of distinct rows.

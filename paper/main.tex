@@ -1,0 +1,213 @@
+\documentclass[10pt]{article}
+\usepackage[letterpaper,margin=0.85in]{geometry}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array,booktabs,flafter}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={A Hadamard matrix of order 4792},pdfauthor={Jeffery Kline}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\emergencystretch=2em
+\DeclareTextSymbolDefault{\textbullet}{OMS}
+\DeclareTextSymbolDefault{\textsection}{OMS}
+
+\newcommand{\tr}{^{\mathsf T}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\cQ}{\mathcal Q}
+\newcommand{\cU}{\mathcal U}
+\newcommand{\cV}{\mathcal V}
+\newcommand{\cD}{\mathcal D}
+
+\title{A Hadamard matrix of order 4792}
+\author{Jeffery Kline}
+\date{November 27, 2026\\[3pt]\small Draft}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A Hadamard matrix of order $n$ is an $n\times n$ matrix with entries $\pm1$ and pairwise orthogonal rows. We construct one of order $4792=8\cdot599$, an order listed as open in the 2026 survey of Egan, Kotsireas, London and \'O~Cath\'ain. Miyamoto's 1991 theorem gives a Hadamard matrix of order $8m$ from a conference matrix of order $m+1$ and a quaternary Hadamard matrix of order $m-1$. We show that a real Hadamard matrix of order $2(m-1)$ can replace the quaternary one, provided its rows and columns can be paired so that every $2\times2$ block is a Hadamard matrix. Quaternary inputs are the case in which all blocks have the same determinant; the extension allows both signs. For $m=599$ we build such a matrix of order 1196. It comes from the Baumert--Hall array of order 52 that SageMath obtains from T-sequences of length 13, with Williamson-type matrices of order 23 substituted. The array admits a suitable pairing when two of the four Williamson-type matrices are equal. We obtain such a quadruple from a self-complementary regular two-graph on 46 vertices published by Maksimovi\'c. A Paley conference matrix of order 600 completes the construction. We verify every entry and the full Gram matrix of the result.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+A \emph{Hadamard matrix} of order $n$ is an $n\times n$ matrix $H$ with entries $\pm1$ and $HH\tr=nI$. Such matrices are conjectured to exist at every order divisible by~$4$. The 2026 survey of Egan, Kotsireas, London and \'O~Cath\'ain~\cite{EKLO} lists the orders up to $10^4$ at which none is known (its Table~5). One of its rows lists the orders $8p$ for the primes $p=599$, $719$, $739$, $839$, $1031$ and $1087$; the current list of unknown orders~\cite{U61} also contains $4792=8\cdot599$.
+
+A \emph{conference matrix} of order $c$ is a $c\times c$ matrix $C$ with zero diagonal, entries $\pm1$ off the diagonal, and $CC\tr=(c-1)I$. A \emph{quaternary Hadamard matrix} of order $k$ has entries in $\{\pm1,\pm i\}$ and satisfies $YY^*=kI$. Miyamoto~\cite[Theorem~7]{Mi91} proved that, for odd $m$, a conference matrix of order $m+1$ and a quaternary Hadamard matrix of order $m-1$ give a quaternary Hadamard matrix of order $4m$, and hence a real Hadamard matrix of order $8m$. For $m=599$ Paley's construction~\cite{Pa33} gives a conference matrix of order 600, but we know of no quaternary Hadamard matrix of order 598.
+
+Replacing each entry $a+bi$ of a quaternary matrix by the $2\times2$ real matrix $\left(\begin{smallmatrix}a&-b\\ b&a\end{smallmatrix}\right)$ and multiplying on the right by $I\otimes H_2$, where $H_2=\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)$, gives a real Hadamard matrix of twice the order that is a block matrix of $2\times2$ Hadamard matrices. We call such matrices \emph{paired-block} (Definition~\ref{def:paired}). The blocks coming from quaternary entries are rotations times $H_2$, and all have determinant $-2$; in general a block is a rotation or a reflection times $H_2$, and its determinant is $-2$ or $2$.
+
+\begin{theorem}\label{thm:transfer}
+Let $m=2n+1\ge3$. If there are a symmetric or skew-symmetric conference matrix of order $m+1$ and a paired-block Hadamard matrix of order $4n=2(m-1)$, then there is a Hadamard matrix of order $8m$.
+\end{theorem}
+
+\begin{theorem}\label{thm:4792}
+There is a Hadamard matrix of order $4792$.
+\end{theorem}
+
+Theorem~\ref{thm:transfer} is proved in Section~\ref{sec:transfer}. Its construction follows Seberry and Yamada's eight-block construction~\cite[Lemma~8.12]{SY92}, with the Williamson-type input replaced by the paired-block matrix. Section~\ref{sec:paired} builds a paired-block Hadamard matrix of order 1196, and Section~\ref{sec:order23} supplies the Williamson-type matrices of order 23 that it needs. Section~\ref{sec:verify} assembles the matrix of order 4792 and records the computations that verify it.
+
+\paragraph{What is new.} Miyamoto's theorem, Paley's conference matrices, the Cooper--Wallis construction and the symmetric conference matrices of order 46 were known, and the language of $2\times2$ signed permutations is Craigen's~\cite{Cr95}. New here are Theorem~\ref{thm:transfer}, which admits reflections as well as rotations; the observation that the Cooper--Wallis array of order 52 used by SageMath has a pairing that works whenever two of the four substituted matrices are equal (Lemma~\ref{lem:pairing}); the resulting paired-block matrix of order 1196; and the Hadamard matrix of order 4792. The author's earlier release~\cite{Kl26} made the analogous relaxation from rotations to reflections in Kumar's construction of order $4(q+2)$.
+
+\section{Paired-block Hadamard matrices}\label{sec:pb}
+A $2\times2$ matrix with entries $\pm1$ is a Hadamard matrix exactly when the product of its four entries is $-1$. The eight $2\times2$ signed permutation matrices form the group $SP_2$; it contains the four rotations $\pm I$, $\pm\left(\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right)$ and four reflections. Each $2\times2$ Hadamard matrix $T$ can be written uniquely as $T=PH_2$ with $P=TH_2/2\in SP_2$.
+
+\begin{definition}\label{def:paired}
+A Hadamard matrix $F$ of order $2k$ is \emph{paired-block} if its rows and its columns can each be partitioned into $k$ ordered pairs such that the $2\times2$ submatrix on every row pair and column pair is a Hadamard matrix.
+\end{definition}
+
+After permuting rows and columns so that the pairs are consecutive, $F=(P_{ij}H_2)_{i,j=1}^k$ with $P_{ij}\in SP_2$, and $FF\tr=2kI$ is equivalent to $\sum_l P_{il}P_{jl}\tr=k\,\delta_{ij}I_2$. In Craigen's terminology~\cite{Cr95}, $(P_{ij})$ is a signed-group Hadamard matrix $SH(k,SP_2)$, and $F$ is its expansion by $H_2$~\cite[Theorem~5]{Cr95}. If every $P_{ij}$ is a rotation, replacing $\pm I$ by $\pm1$ and $\pm\left(\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right)$ by $\pm i$ gives a quaternary Hadamard matrix of order $k$; reversing the order within a column pair changes the determinants of all blocks in that column. Thus quaternary Hadamard matrices correspond to paired-block matrices in which, for a suitable order within the pairs, every block has determinant $-2$.
+
+\section{Proof of Theorem~\ref{thm:transfer}}\label{sec:transfer}
+Throughout, $J$ is an all-one matrix, $\one$ an all-one column, and $P=\left(\begin{smallmatrix}1&-1\\-1&1\end{smallmatrix}\right)$, so that $J_2P=PJ_2=0$, $J_2^2=2J_2$, $P^2=2P$ and $J_2+P=2I_2$.
+
+\paragraph{The conference matrix.} Multiplying rows and columns by $-1$, we may write $C=\left(\begin{smallmatrix}0&\one\tr\\ \varepsilon\one&Q\end{smallmatrix}\right)$ with $\varepsilon=\pm1$, $Q\tr=\varepsilon Q$, $Q\one=0$ and $QQ\tr=mI-J$. Index $Q$ by $\{0,\dots,m-1\}$ and let $S_+$ and $S_-$ be the sets of $y$ with $Q_{0y}=1$ and $Q_{0y}=-1$; each has $n$ elements. Let $Q^*$ be the principal submatrix of $Q$ on $S_+$ followed by $S_-$. For $x\in S_\sigma$ we have $Q_{x0}=\varepsilon\sigma$, so
+\begin{equation}\label{eq:qstar}
+Q^*Q^{*\mathsf T}=mI-J-\varepsilon^2 qq\tr=mI-2(J_n\oplus J_n),
+\end{equation}
+where $q_x=\sigma$ for $x\in S_\sigma$. Let $a_x$ and $b_x$ be the sums of $Q_{xy}$ over $y\in S_+$ and over $y\in S_-$. From $Q\one=0$ and $(QQ\tr)_{x0}=-1$ we get $a_x+b_x=-\varepsilon\sigma$ and $a_x-b_x=-1$. Hence $(a_x,b_x)$ depends only on $\sigma$: it is $(-1,0)$ or $(0,1)$ for $\varepsilon=1$, and $(0,1)$ or $(-1,0)$ for $\varepsilon=-1$, according as $\sigma=1$ or $\sigma=-1$. Collect these as the rows of a $2\times2$ signed permutation matrix $S_Q$, indexed by the half of $x$ and the half of $y$.
+
+\paragraph{The core.} Let $F$ be paired-block of order $4n$, with pairs consecutive. Put
+\[
+\cQ=Q^*\otimes H_2,\quad \cU=I_2\otimes\cQ,\quad \cD=I_{2n}\otimes H_2,\quad F'=-\tfrac12(\cD F\cD)\tr,\quad \cV=\begin{pmatrix}\cD&F\\ F'&\cD\end{pmatrix},
+\]
+all of order $8n$ except $\cQ,\cD,F,F'$ of order $4n$. A block $T=XH_2$ of $F$ ($X\in SP_2$) gives the block $H_2TH_2/2=H_2X$ of $\cD F\cD/2$, a sign matrix; so $F'$ is a sign matrix. The matrix $\cQ$ vanishes exactly on the diagonal $2\times2$ blocks, which is where $\cD$ is supported. So $\cU$ and $\cV$ have complementary supports and $\cU+\cV$ is a sign matrix. Using $\cD=\cD\tr$, $\cD^2=2I$ and $FF\tr=F\tr F=4nI$,
+\begin{equation}\label{eq:VV}
+\cV\cV\tr=(4n+2)I=2mI,
+\end{equation}
+since the off-diagonal block is $\cD F'^{\mathsf T}+F\cD=-\cD\cD F\cD/2+F\cD=0$ and $F'F'^{\mathsf T}=\cD F\tr F\cD/2=4nI$. By~\eqref{eq:qstar} and $H_2H_2\tr=2I$,
+\begin{equation}\label{eq:UU}
+\cU\cU\tr=I_2\otimes\bigl(Q^*Q^{*\mathsf T}\otimes2I_2\bigr)=2mI-4\,I_2\otimes(J_n\oplus J_n)\otimes I_2 .
+\end{equation}
+
+\paragraph{Strands.} The $8n$ indices of $\cU$ and $\cV$ are triples $(c,(\sigma,t),h)$: a copy $c\in\{0,1\}$, an element $x\in S_\sigma$ written as the $t$-th element of its half, and an index $h\in\{0,1\}$ of $H_2$. Reorder them lexicographically by $(\sigma,h,c,t)$; the first three coordinates name one of eight \emph{strands} of $n$ indices. By~\eqref{eq:UU}, $\cU\cU\tr=2mI-4\,I_8\otimes J_n$ in this order. The sum of the entries of a row of $\cU$ in strand $(\sigma,h,c)$ over a column strand $(\sigma',h',c')$ is $\delta_{cc'}(S_Q)_{\sigma\sigma'}(H_2)_{hh'}$; so these strand sums form the matrix $S=S_Q\otimes H_2\otimes I_2$, and $SS\tr=2I_8$.
+
+\paragraph{The border.} Index the strands by $(s,h,c)\in\{0,1\}^3$, and put $N=J_4-2I_4$ and $K=H_2\otimes I_2\otimes H_2$, so that $KK\tr=4I_8$. Define
+\[
+R_{(u,a),(s,h,c)}=(H_2)_{uh}\,N_{a,2s+c}\quad(u\in\{0,1\},\ a\in\{0,1,2,3\}),\qquad B=\tfrac12RK,\qquad R'=-SK.
+\]
+$R$ is a column permutation of $H_2\otimes N$, so $RR\tr=8I$. The entry of $RK$ in row $(u,a)$ and column $(s',h',c')$ is
+\[
+(H_2)_{uh'}\sum_{s,c\in\{0,1\}}N_{a,2s+c}(-1)^{ss'+cc'}.
+\] Each row of $N$ has exactly one entry $-1$, and each character $(s,c)\mapsto(-1)^{ss'+cc'}$ has an even number of values $-1$; so the four products in the sum include an odd number of $-1$'s, the sum is $\pm2$, and $B$ is a sign matrix. Moreover $BB\tr=RKK\tr R\tr/4=8I$. Finally $R'=-(S_QH_2)\otimes H_2\otimes H_2$ is a sign matrix with $R'R'^{\mathsf T}=8I$.
+
+\paragraph{The matrix.} In the strand order, let
+\[
+H=\begin{pmatrix}B&R\otimes\one_{2n}\tr\\ R'\otimes\one_{2n}&\cU\otimes J_2+\cV\otimes P\end{pmatrix},
+\]
+where the core index is (strand, $t$, sector) with a sector coordinate in $\{0,1\}$ appended last, and $\one_{2n}$ runs over $(t,\text{sector})$. Its order is $8+16n=8m$, and it is a sign matrix because $\cU$ and $\cV$ have complementary supports.
+
+The border rows have Gram $BB\tr+2n\,RR\tr=(8+16n)I=8mI$. For a border row and a core row in strand $\rho$, the $\cV\otimes P$ part contributes nothing, since the rows of $P$ sum to zero, and the $\cU\otimes J_2$ part contributes twice the strand sums; the inner product is $(BR'^{\mathsf T}+2RS\tr)_{\cdot,\rho}=(-\tfrac12RKK\tr S\tr+2RS\tr)_{\cdot,\rho}=0$. For two core rows, the cross terms vanish because $J_2P=PJ_2=0$, and by~\eqref{eq:VV} and~\eqref{eq:UU}
+\[
+R'R'^{\mathsf T}\otimes J_{2n}+2\,\cU\cU\tr\otimes J_2+2\,\cV\cV\tr\otimes P
+=8\,I_8\otimes J_n\otimes J_2+(4mI-8\,I_8\otimes J_n)\otimes J_2+4mI\otimes P=8mI,
+\]
+using $J_{2n}=J_n\otimes J_2$ and $J_2+P=2I_2$. Hence $HH\tr=8mI$. \qed
+
+\begin{remark}
+Miyamoto's argument is written in a ring with an anti-involution~\cite[p.~97]{Mi91}, which suggests deriving Theorem~\ref{thm:transfer} by taking the ring of $2\times2$ integer matrices and expanding by $H_2$~\cite[Theorem~5]{Cr95}. The proof of~\cite[Theorem~7]{Mi91} does not carry over verbatim: its identity~(6.1) and its matrix $V$ use entrywise conjugation, which for $2\times2$ blocks reverses products, and the last equality of~(6.1) already fails for $m=1$ with entries in $SP_2$. Replacing $V$ by $\left(\begin{smallmatrix}B'&Y\\-B'Y^*B'&B'\end{smallmatrix}\right)$, with $B'$ the identity or the exchange of the two halves according to the parity of the order, repairs it. The construction above avoids the question.
+\end{remark}
+
+\section{A paired-block Hadamard matrix of order 1196}\label{sec:paired}
+\paragraph{The array of order 52.} T-sequences of length $t$ are four sequences with entries in $\{0,\pm1\}$, exactly one nonzero entry in each position, and periodic autocorrelations summing to $t$ at shift $0$ and to $0$ at every other shift. SageMath~\cite{Sage} builds T-sequences of length 13 from the Turyn sequences of length 7~\cite{Tu74} by the base-sequence construction of~\cite{KTR05}:
+\[
+T_1=(1,1,0,-1,0,1,0,0^6),\quad T_2=(0,0,1,0,1,0,1,0^6),\quad T_3=(0^7,1,1,-1,1,-1,-1),\quad T_4=0^{13}.
+\]
+Let $X_k$ be the circulant with first row $T_k$, let $R_{13}$ be the back-diagonal permutation matrix, and let
+\[
+\mathrm{GS}(A,B,C,D)=\begin{pmatrix}A&BR_{13}&CR_{13}&DR_{13}\\-BR_{13}&A&-D\tr R_{13}&C\tr R_{13}\\-CR_{13}&D\tr R_{13}&A&-B\tr R_{13}\\-DR_{13}&-C\tr R_{13}&B\tr R_{13}&A\end{pmatrix}
+\]
+be the Goethals--Seidel array~\cite{GS70}. Following Cooper and Wallis~\cite{CW72}, SageMath sets $e_1=\mathrm{GS}(X_1,X_2,X_3,X_4)$, $e_2=\mathrm{GS}(X_2,-X_1,X_4,-X_3)$, $e_3=\mathrm{GS}(X_3,-X_4,-X_1,X_2)$ and $e_4=\mathrm{GS}(X_4,X_3,-X_2,-X_1)$. The matrices $e_k$ have disjoint supports covering all positions, and $L=\sum_kx_ke_k$ is a Baumert--Hall array: $LL\tr=13(x_1^2+x_2^2+x_3^2+x_4^2)I_{52}$ for commuting variables. If $W_1,\dots,W_4$ are $\pm1$ matrices of order $w$ with $W_iW_j\tr=W_jW_i\tr$ for all $i,j$ and $\sum_iW_iW_i\tr=4wI$ (Williamson-type matrices), then $\sum_ke_k\otimes W_k$ is a Hadamard matrix of order $52w$~\cite{CW72}.
+
+\paragraph{The pairing.} Write a row or column index of $L$ as $(i,x)$ with $i\in\{0,1,2,3\}$ the block and $x\in\mathbb Z_{13}$. Pair the rows by
+\[
+(0,x)\leftrightarrow(2,6-x),\qquad (1,x)\leftrightarrow(3,1-x),
+\]
+and the columns by $(0,y)\leftrightarrow(2,10-y)$ and $(1,y)\leftrightarrow(3,5-y)$.
+
+\begin{lemma}\label{lem:pairing}
+For each of the $26\cdot26=676$ pairs of a row pair and a column pair, the four entries of $L$ in the block are $\pm x_{a_1},\pm x_{a_2},\pm x_{a_3},\pm x_{a_4}$ with sign product $-1$. In $572$ blocks every variable occurs an even number of times; in the other $104$, $x_1$ and $x_2$ each occur an odd number of times and $x_3,x_4$ an even number.
+\end{lemma}
+
+\begin{proof}
+A finite check of the 676 blocks, carried out by \texttt{evidence/build.cpp}. The array there is generated from the displayed T-sequences and the formulas above, and its formal Gram is also checked.
+\end{proof}
+
+\begin{corollary}\label{cor:pb}
+If $W_1,\dots,W_4$ are Williamson-type matrices of order $w$ with $W_1=W_2$, then $\sum_ke_k\otimes W_k$ is a paired-block Hadamard matrix of order $52w$.
+\end{corollary}
+
+\begin{proof}
+Pair row $((i,x),\alpha)$ with $((i',x'),\alpha)$ whenever $(i,x)\leftrightarrow(i',x')$, for each $\alpha\in\{1,\dots,w\}$, and similarly for columns. The block at row pair $(r,r')$, column pair $(c,c')$ and inner position $(\alpha,\beta)$ has entries $\pm(W_{a})_{\alpha\beta}$ with the signs and indices of Lemma~\ref{lem:pairing}. Its entry product is $-1$ times a product in which every factor $(W_a)_{\alpha\beta}$ occurs an even number of times, after using $(W_1)_{\alpha\beta}=(W_2)_{\alpha\beta}$ in the 104 exceptional blocks.
+\end{proof}
+
+A matrix negated or a relabeling of the four matrices preserves the Williamson-type conditions, so any Williamson-type quadruple with two members equal up to sign gives a paired-block Hadamard matrix of order $52w$.
+
+\begin{remark}
+No pairing of the rows and columns of $L$ makes every block have sign product $-1$ and every variable even. An exhaustive search over pairings (\texttt{evidence/universal.cpp}) finds none; with $x_1$ and $x_2$ identified, the same search finds the row pairing above. So Corollary~\ref{cor:pb} needs the repeated member.
+\end{remark}
+
+\section{Williamson-type matrices of order 23 with two equal members}\label{sec:order23}
+\begin{proposition}\label{prop:split}
+Let $C$ be a symmetric conference matrix of order $2w$, and let $J$ be a signed permutation matrix with $J^2=-I$ and $JC=-CJ$. Then there are a symmetric $\pm1$ matrix $S$ and a symmetric matrix $R$ with zero diagonal and entries $\pm1$ off the diagonal, both of order $w$, such that $RS=SR$ and $R^2+S^2=(2w-1)I$. Consequently $S,S,I+R,R-I$ are Williamson-type matrices of order $w$.
+\end{proposition}
+
+\begin{proof}
+Write $Je_i=s_ie_{p(i)}$. Since $J^2=-I$, $p$ is a fixed-point-free involution. Choose one vertex $f_k$ from each pair of $p$ and use the orthonormal basis $e_{f_1},\dots,e_{f_w},Je_{f_1},\dots,Je_{f_w}$. In it $J=\left(\begin{smallmatrix}0&-I\\I&0\end{smallmatrix}\right)$ and $C=\left(\begin{smallmatrix}X&Y\\Z&W\end{smallmatrix}\right)$. The relation $JC=-CJ$ gives $Z=Y$ and $W=-X$; symmetry of $C$ makes $X$ and $Y$ symmetric; and $C^2=(2w-1)I$ gives $XY=YX$ and $X^2+Y^2=(2w-1)I$. The change of basis is a signed permutation, so $X$ has zero diagonal and entries $\pm1$ off it, and $Y$ has entries $\pm1$ (its diagonal entries are entries $\pm C_{f_k,p(f_k)}$ of $C$ off its diagonal). Put $R=X$ and $S=Y$. The four matrices are symmetric and pairwise commuting, hence pairwise amicable, and $2S^2+(I+R)^2+(R-I)^2=2(S^2+R^2+I)=4wI$.
+\end{proof}
+
+A regular two-graph on $46$ vertices gives a symmetric conference matrix of order $46$: take the Seidel matrix of a descendant (entry $-1$ for an edge, $+1$ for a non-edge, $0$ on the diagonal) and border it with a row and column of ones and a zero corner. Symmetric conference matrices of order 46 were first constructed by Mathon~\cite{Mat78}. Maksimovi\'c~\cite[Table~12]{Ma23} lists the self-complementary regular two-graphs $\Phi_{114},\dots,\Phi_{121}$ on 46 vertices, with automorphism group of order six, and publishes their descendants~\cite{Ma23data}. For $\Phi_{114}$ a complementing permutation, combined with switching signs, gives a signed permutation $J$ satisfying the hypotheses of Proposition~\ref{prop:split}; the file \texttt{evidence/phi114-involution.txt} lists the involution $p$ and the signs $s$. The resulting matrices $S$ and $R$ of order 23 are in \texttt{evidence/wt23.txt}. Turyn's infinite family of Williamson matrices~\cite{Tu72} also has two equal members; here $45$ is not a prime power, and the two-graph replaces the finite field.
+
+\section{The matrix of order 4792}\label{sec:verify}
+\begin{proof}[Proof of Theorem~\ref{thm:4792}]
+Proposition~\ref{prop:split}, applied to $\Phi_{114}$, gives Williamson-type matrices $S,S,I+R,R-I$ of order 23. By Corollary~\ref{cor:pb} they give a paired-block Hadamard matrix of order $52\cdot23=1196=4\cdot299$. Since $599$ is a prime congruent to $3$ modulo $4$, Paley's construction gives a skew-symmetric conference matrix of order 600: with $\chi$ the quadratic character of $\mathbb F_{599}$, $Q_{xy}=\chi(y-x)$ and $C=\left(\begin{smallmatrix}0&\one\tr\\-\one&Q\end{smallmatrix}\right)$. Theorem~\ref{thm:transfer} with $n=299$ and $m=599$ gives a Hadamard matrix of order $8\cdot599=4792$.
+\end{proof}
+
+All of the construction is explicit, and the release contains the resulting matrices. The program \texttt{evidence/build.cpp} checks the hypotheses at each step: the commutation relations and Gram identity of the four matrices of order 23; the formal Gram of $L$; the 676 blocks of Lemma~\ref{lem:pairing}; that all $598^2=357604$ blocks of the matrix of order 1196 are Hadamard (98306 of them are reflections times $H_2$); the complementary supports, constant strand sums and sign conditions of Section~\ref{sec:transfer}. It writes the signed permutation array $SH(598,SP_2)$ and the matrix of order 4792. A separate program, \texttt{evidence/verify.cpp}, reads only these two files. It checks that the signed permutation array satisfies $MM\tr=598I$ and that its expansion by $H_2$ is a Hadamard matrix of order 1196, and that every two distinct rows of the matrix of order 4792 differ in exactly 2396 positions, which is the identity $HH\tr=4792I$ for all $11{,}479{,}236$ pairs of rows. The program \texttt{evidence/derive.cpp} re-derives $S$ and $R$ from the published descendant of $\Phi_{114}$ and checks $C^2=45I$, $J^2=-I$ and $JC=-CJ$. Table~\ref{tab:checks} summarizes the files.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+File & Content & Check\\
+\midrule
+\texttt{wt23.txt} & $S$ and $R$ of order 23 & commuting, Gram $92I$; re-derived from~\cite{Ma23data}\\
+\texttt{sh598.sp2} & $SH(598,SP_2)$, digits 0--7 & $MM\tr=598I$; expansion Hadamard of order 1196\\
+\texttt{H4792.packed.gz} & Hadamard matrix of order 4792 & all row pairs at distance 2396\\
+\bottomrule
+\end{tabular}
+\caption{Certificates in the release. The build reproduces both matrices byte for byte; their SHA-256 digests are recorded in the repository.}\label{tab:checks}
+\end{table}
+
+\section{Earlier work}\label{sec:earlier}
+Miyamoto~\cite{Mi91} introduced the recursion from a conference matrix of order $m+1$ and a quaternary Hadamard matrix of order $m-1$, and Seberry and Yamada~\cite[Lemma~8.12 and Corollary~8.14]{SY92} described an eight-block construction with Williamson-type inputs whose structure the proof in Section~\ref{sec:transfer} follows. Craigen~\cite{Cr95} introduced signed groups and signed-group Hadamard matrices, including the expansion of $SH(k,SP_2)$ to a real Hadamard matrix of order $2k$. The array of Section~\ref{sec:paired} is Cooper and Wallis's construction~\cite{CW72} in the Goethals--Seidel layout~\cite{GS70}, with T-sequences from Turyn sequences~\cite{Tu74,KTR05}, as implemented in SageMath~\cite{Sage}. Williamson-type matrices go back to Williamson~\cite{Wi44}. We found no earlier construction of a Hadamard matrix of order 4792; the order is listed as open in~\cite{EKLO} and~\cite{U61}, and the search is recorded in the release repository.
+
+\section{Role of AI}\label{sec:ai}
+AI assisted the derivations, the computer verification, the literature search and the exposition under the author's direction. Process-separated AI reviews checked the proofs and certificates; they are not independent expert peer review, and no independent human expert has examined the proofs. The release repository records the sources, the reviews and their dispositions.
+
+\begin{thebibliography}{99}\small
+\bibitem{CW72} J. Cooper and J. S. Wallis, A construction for Hadamard arrays, \emph{Bull. Austral. Math. Soc.} \textbf{7} (1972), 269--277.
+\bibitem{Cr95} R. Craigen, Signed groups, sequences, and the asymptotic existence of Hadamard matrices, \emph{J. Combin. Theory Ser. A} \textbf{71} (1995), 241--254.
+\bibitem{EKLO} R. Egan, I. S. Kotsireas, S. London and P. \'O~Cath\'ain, Recent progress in the construction of Hadamard matrices, arXiv:2610.27175v2 (2026).
+\bibitem{GS70} J. M. Goethals and J. J. Seidel, A skew Hadamard matrix of order 36, \emph{J. Austral. Math. Soc.} \textbf{11} (1970), 343--344.
+\bibitem{KTR05} H. Kharaghani and B. Tayfeh-Rezaie, A Hadamard matrix of order 428, \emph{J. Combin. Des.} \textbf{13} (2005), 435--440.
+\bibitem{Kl26} J. Kline, Hadamard matrices of orders 5164 and 8332 from real weighing matrices, version 0.1.0 (2026), \href{https://doi.org/10.5281/zenodo.24519197}{doi:10.5281/zenodo.24519197}.
+\bibitem{Ma23} M. Maksimovi\'c, On some regular two-graphs up to 50 vertices, \emph{Symmetry} \textbf{15} (2023), no.~2, 408, \href{https://doi.org/10.3390/sym15020408}{doi:10.3390/sym15020408}.
+\bibitem{Ma23data} M. Maksimovi\'c, descendants of the regular two-graphs on 46 vertices, data file \url{https://www.math.uniri.hr/~mmaksimovic/46_descendants6.txt} (SHA-256 \texttt{56feb86a\ldots dc3dba}, retrieved November 27, 2026).
+\bibitem{Mat78} R. Mathon, Symmetric conference matrices of order $pq^2+1$, \emph{Canad. J. Math.} \textbf{30} (1978), 321--331.
+\bibitem{Mi91} M. Miyamoto, A construction of Hadamard matrices, \emph{J. Combin. Theory Ser. A} \textbf{57} (1991), 86--108.
+\bibitem{Pa33} R. E. A. C. Paley, On orthogonal matrices, \emph{J. Math. Phys.} \textbf{12} (1933), 311--320.
+\bibitem{Sage} The Sage Developers, SageMath, modules \texttt{sage.combinat.matrices.hadamard\_matrix} and \texttt{sage.combinat.t\_sequences}, \url{https://www.sagemath.org}.
+\bibitem{SY92} J. Seberry and M. Yamada, Hadamard matrices, sequences, and block designs, in \emph{Contemporary Design Theory: A Collection of Surveys}, J. H. Dinitz and D. R. Stinson (eds.), Wiley, 1992, 431--560.
+\bibitem{Tu72} R. J. Turyn, An infinite class of Williamson matrices, \emph{J. Combin. Theory Ser. A} \textbf{12} (1972), 319--321.
+\bibitem{Tu74} R. J. Turyn, Hadamard matrices, Baumert--Hall units, four-symbol sequences, pulse compression, and surface wave encodings, \emph{J. Combin. Theory Ser. A} \textbf{16} (1974), 313--333.
+\bibitem{U61} Hadamard matrices: orders up to 10000 for which no construction is known, version 61 (November 2026), \url{https://www.math74.com/Hadamard/unknown.html}.
+\bibitem{Wi44} J. Williamson, Hadamard's determinant theorem and the sum of four squares, \emph{Duke Math. J.} \textbf{11} (1944), 65--81.
+\end{thebibliography}
+\end{document}
