@@ -12,6 +12,6 @@ This paper is prepared for version 0.1.0 under Kline's [research standard](https
 
 ## Residuals
 
-- The reviewers could not open Maksimović's Table 12 (publisher returned 403). The construction does not use it: `make source` re-derives the order-23 matrices from the published data file and checks every identity used.
+- Maksimović's Table 12 was read by the author from the published PDF on November 27, 2026: two-graphs 114–121 on 46 vertices have automorphism groups of order 6 and are self-complementary. The construction does not depend on the table; `make source` re-derives the order-23 matrices from the published data file and checks every identity used.
 - Turyn's 1972 family is described from secondary sources. It is a side remark.
 - Equivalence of this matrix to other Hadamard matrices was not studied.
