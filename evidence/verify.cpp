@@ -99,8 +99,9 @@ void verify_sp2(const char* path) {
     }
     long p1 = check_gram(M, 2 * N, N, "SH(598, SP2)");
     long p2 = check_gram(F, 2 * N, 2 * N, "order-1196 expansion");
-    std::cout << "sh598.sp2: SH(598, SP2), " << p1 << " row pairs of M M^T = 598 I; expansion of order 1196 is Hadamard ("
-              << p2 << " row pairs), " << blocks << " blocks with product -1\n";
+    std::cout << "sh598.sp2: SH(598, SP2): the 1196 x 1196 block matrix M has M M^T = 598 I (" << p1
+              << " row pairs with the diagonal); its expansion by H2 is Hadamard of order 1196 (" << p2
+              << " row pairs); " << blocks << " blocks with product -1\n";
 }
 
 void verify_packed(const char* path) {
